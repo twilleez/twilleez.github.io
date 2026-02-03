@@ -1,27 +1,118 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>PerformanceIQ</title>
-<link rel="stylesheet" href="app.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0f14">
+  <title>PerformanceIQ</title>
+  <link rel="icon" href="./icon-192.png">
+  <link rel="stylesheet" href="./app.css">
 </head>
 <body>
-
-<div id="splash">
-  <div id="splashCard">
-    <img src="logo.png" alt="PerformanceIQ Logo">
-    <p>Loading…</p>
+  <div id="splash">
+    <div id="splashCard">
+      <img src="./logo.png" alt="PerformanceIQ Logo">
+      <div class="small">Loading…</div>
+    </div>
   </div>
-</div>
 
-<div id="app" style="display:none">
-  <h1>PerformanceIQ</h1>
-  <button id="genBtn" type="button">Generate Program</button>
-  <pre id="out"></pre>
-</div>
+  <div class="topbar">
+    <div class="brand">
+      <img src="./logo.png" alt="Logo">
+      <div class="brandTitle">PerformanceIQ</div>
+      <div class="chip">phase2-20260203-002612</div>
+    </div>
+    <div class="nav" role="navigation" aria-label="Primary">
+      <button id="nav-profile" type="button">Profile</button>
+      <button id="nav-program" type="button">Program</button>
+      <button id="nav-log" type="button">Log</button>
+      <button id="nav-dashboard" type="button">Dashboard</button>
+    </div>
+  </div>
 
-<script src="boot.js"></script>
-<script src="core.js"></script>
+  <div class="container">
+    <div class="grid">
+      <div class="card" id="tab-profile">
+        <h2>Athlete profile</h2>
+        <div class="row">
+          <div class="field">
+            <label for="sport">Sport</label>
+            <select id="sport">
+              <option value="basketball">Basketball</option>
+              <option value="football">Football</option>
+              <option value="volleyball">Volleyball</option>
+              <option value="baseball">Baseball</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="level">Level</label>
+            <select id="level">
+              <option value="youth">Youth development</option>
+              <option value="hs">High school</option>
+              <option value="college">College prep</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:10px">
+          <div class="field">
+            <label for="days">Days per week</label>
+            <select id="days">
+              <option value="3">3</option>
+              <option value="4" selected>4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="focus">Primary focus</label>
+            <select id="focus">
+              <option value="balanced">Balanced</option>
+              <option value="faster">Get faster</option>
+              <option value="jump">Jump higher</option>
+              <option value="power">Explosive power</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="position">Position (optional)</label>
+            <input id="position" placeholder="e.g., PG, WR, Setter, SS">
+          </div>
+        </div>
+
+        <div class="btnRow">
+          <button class="btn" id="btnGenerate" type="button">Generate program</button>
+          <button class="btn secondary" id="btnResetData" type="button">Reset saved data</button>
+        </div>
+        <div class="small" style="margin-top:10px">
+          This phase adds: tabs + program generator + lift log + weekly volume chart (offline, device-local).
+        </div>
+      </div>
+
+      <div>
+        <div class="card" id="tab-program" style="display:none">
+          <h2>Program output</h2>
+          <div id="programOutput" class="small">Generate a program from the Profile tab.</div>
+        </div>
+
+        <div class="card" id="tab-log" style="display:none">
+          <h2>Workout log</h2>
+          <div class="small">Enter weights used for each set. Saved locally on this device.</div>
+          <div id="logContainer" style="margin-top:10px"></div>
+          <div class="btnRow">
+            <button class="btn" id="btnSaveLog" type="button">Save today’s log</button>
+          </div>
+        </div>
+
+        <div class="card" id="tab-dashboard" style="display:none">
+          <h2>Dashboard</h2>
+          <div class="small">Weekly volume trend based on your saved logs.</div>
+          <canvas id="volChart" width="900" height="220"></canvas>
+          <div id="dashSummary" class="small" style="margin-top:10px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./boot.js"></script>
+  <script src="./core.js"></script>
 </body>
 </html>
