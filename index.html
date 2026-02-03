@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#0b0f14">
   <title>PerformanceIQ</title>
   <link rel="icon" href="./icon-192.png">
+  <link rel="manifest" href="./manifest.json">
   <link rel="stylesheet" href="./app.css">
 </head>
 <body>
@@ -20,7 +21,7 @@
     <div class="brand">
       <img src="./logo.png" alt="Logo">
       <div class="brandTitle">PerformanceIQ</div>
-      <div class="chip">phase2-20260203-002612</div>
+      <div class="chip">phase3-20260203-024421</div>
     </div>
     <div class="nav" role="navigation" aria-label="Primary">
       <button id="nav-profile" type="button">Profile</button>
@@ -33,15 +34,17 @@
   <div class="container">
     <div class="grid">
       <div class="card" id="tab-profile">
-        <h2>Athlete profile</h2>
+        <h2>Profile</h2>
+
         <div class="row">
           <div class="field">
             <label for="sport">Sport</label>
             <select id="sport">
               <option value="basketball">Basketball</option>
               <option value="football">Football</option>
-              <option value="volleyball">Volleyball</option>
               <option value="baseball">Baseball</option>
+              <option value="volleyball">Volleyball</option>
+              <option value="soccer">Soccer</option>
             </select>
           </div>
           <div class="field">
@@ -64,6 +67,14 @@
             </select>
           </div>
           <div class="field">
+            <label for="programLevel">Program</label>
+            <select id="programLevel">
+              <option value="easy">Easy</option>
+              <option value="standard" selected>Standard</option>
+              <option value="advanced">Advanced</option>
+            </select>
+          </div>
+          <div class="field">
             <label for="focus">Primary focus</label>
             <select id="focus">
               <option value="balanced">Balanced</option>
@@ -72,9 +83,23 @@
               <option value="power">Explosive power</option>
             </select>
           </div>
+        </div>
+
+        <div class="row" style="margin-top:10px">
           <div class="field">
-            <label for="position">Position (optional)</label>
-            <input id="position" placeholder="e.g., PG, WR, Setter, SS">
+            <label for="position">Position</label>
+            <select id="position"></select>
+          </div>
+          <div class="field">
+            <label for="skill">Skill emphasis</label>
+            <select id="skill"></select>
+          </div>
+          <div class="field">
+            <label for="landmine">Include landmine work</label>
+            <select id="landmine">
+              <option value="on" selected>On</option>
+              <option value="off">Off</option>
+            </select>
           </div>
         </div>
 
@@ -82,20 +107,21 @@
           <button class="btn" id="btnGenerate" type="button">Generate program</button>
           <button class="btn secondary" id="btnResetData" type="button">Reset saved data</button>
         </div>
+
         <div class="small" style="margin-top:10px">
-          This phase adds: tabs + program generator + lift log + weekly volume chart (offline, device-local).
+          Multi-sport + 3 programs: Easy / Standard / Advanced (offline).
         </div>
       </div>
 
       <div>
         <div class="card" id="tab-program" style="display:none">
           <h2>Program output</h2>
-          <div id="programOutput" class="small">Generate a program from the Profile tab.</div>
+          <div id="programOutput" class="small">Generate a program from Profile.</div>
         </div>
 
         <div class="card" id="tab-log" style="display:none">
           <h2>Workout log</h2>
-          <div class="small">Enter weights used for each set. Saved locally on this device.</div>
+          <div class="small">Enter weights for each set (lbs). Saved locally.</div>
           <div id="logContainer" style="margin-top:10px"></div>
           <div class="btnRow">
             <button class="btn" id="btnSaveLog" type="button">Save today’s log</button>
@@ -104,7 +130,7 @@
 
         <div class="card" id="tab-dashboard" style="display:none">
           <h2>Dashboard</h2>
-          <div class="small">Weekly volume trend based on your saved logs.</div>
+          <div class="small">Weekly volume trend from logs (sum(weight × reps)).</div>
           <canvas id="volChart" width="900" height="220"></canvas>
           <div id="dashSummary" class="small" style="margin-top:10px"></div>
         </div>
