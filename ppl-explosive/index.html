@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PPL × Explosive Athlete — 8 Week Tracker</title>
+<style>
+:root{--bg:#0b1020;--card:#151c31;--card2:#1d2741;--text:#f6f8ff;--muted:#aeb8d4;--accent:#6ee7b7;--line:#2c3858;--warn:#fbbf24}
+*{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text)}
+.wrap{max-width:760px;margin:auto;padding:16px 14px 90px}.hero{padding:18px 4px 8px}.hero h1{font-size:25px;margin:0 0 5px}.hero p{color:var(--muted);margin:0}
+.tabs{display:flex;gap:8px;overflow:auto;padding:12px 0}.tabs button,.weekbtn{border:1px solid var(--line);background:var(--card);color:var(--text);padding:10px 13px;border-radius:999px;white-space:nowrap}
+.tabs button.active,.weekbtn.active{background:var(--accent);color:#062116;border-color:var(--accent);font-weight:800}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px;margin:12px 0}.card h2{font-size:19px;margin:0 0 8px}.sub{color:var(--muted);font-size:13px;margin-bottom:10px}
+.exercise{display:grid;grid-template-columns:32px 1fr auto;gap:9px;align-items:center;padding:11px 0;border-top:1px solid var(--line)}
+.exercise:first-of-type{border-top:0}.exercise input[type=checkbox]{width:23px;height:23px;accent-color:var(--accent)}
+.exname{font-weight:700}.dose{font-size:13px;color:var(--muted);margin-top:3px}.load{width:72px;background:var(--card2);border:1px solid var(--line);border-radius:9px;color:var(--text);padding:8px}
+.progress{height:11px;background:var(--card2);border-radius:10px;overflow:hidden}.bar{height:100%;background:var(--accent);width:0}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.metric{background:var(--card2);padding:11px;border-radius:12px}.metric label{display:block;color:var(--muted);font-size:12px;margin-bottom:5px}.metric input{width:100%;padding:9px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--text)}
+.note{padding:11px;border-left:4px solid var(--warn);background:#302812;border-radius:8px;color:#fff4c2;font-size:13px}
+.small{font-size:12px;color:var(--muted)} .hidden{display:none}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#0b1020e8;backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:9px 14px calc(9px + env(safe-area-inset-bottom));display:flex;justify-content:center}
+.bottom button{width:min(730px,100%);padding:13px;border:0;border-radius:13px;background:var(--accent);font-weight:900;color:#062116}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="hero"><h1>🏀 PPL × Explosive Athlete</h1><p>8-week strength • vertical • speed • agility tracker</p></div>
+<div class="tabs" id="weeks"></div>
+<div class="card">
+<h2 id="phase"></h2><div class="sub" id="phaseDesc"></div>
+<div class="progress"><div class="bar" id="bar"></div></div><div class="small" id="pct" style="margin-top:6px"></div>
+</div>
+<div id="days"></div>
+<div class="card">
+<h2>📈 Weekly Progress</h2><div class="sub">Enter the best result for the week. Your entries save automatically on this device.</div>
+<div class="grid">
+<div class="metric"><label>Body weight (lb)</label><input data-metric="weight" type="number" step=".1"></div>
+<div class="metric"><label>Standing vertical (in)</label><input data-metric="sv" type="number" step=".1"></div>
+<div class="metric"><label>Approach vertical (in)</label><input data-metric="av" type="number" step=".1"></div>
+<div class="metric"><label>10-yard sprint (sec)</label><input data-metric="sprint" type="number" step=".01"></div>
+<div class="metric"><label>5-10-5 shuttle (sec)</label><input data-metric="shuttle" type="number" step=".01"></div>
+<div class="metric"><label>Leg freshness (1–5)</label><input data-metric="fresh" type="number" min="1" max="5"></div>
+<div class="metric"><label>Knee discomfort (0–10)</label><input data-metric="knee" type="number" min="0" max="10"></div>
+<div class="metric"><label>Achilles discomfort (0–10)</label><input data-metric="achilles" type="number" min="0" max="10"></div>
+<div class="metric"><label>Average sleep (hours)</label><input data-metric="sleep" type="number" step=".1"></div>
+<div class="metric"><label>Session RPE (1–10)</label><input data-metric="rpe" type="number" min="1" max="10"></div>
+</div>
+</div>
+<div class="card"><h2>Progression Rules</h2>
+<div class="note" id="rule"></div>
+<p class="small">For explosive work, stop when technique, jump height, or sprint quality clearly deteriorates. Progress load only with clean technique. Week 5 deliberately reduces volume; Week 8 reduces fatigue before testing.</p>
+</div>
+<div class="card"><h2>🏆 8-Week Comparison</h2><div id="compare" class="small"></div></div>
+</div>
+<div class="bottom"><button onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to Week Selector</button></div>
+<script>
+const base = [
+["🟢 Day 1 — Push + Explosive Upper",[["Medicine-ball chest pass","3 × 5"],["Barbell bench press","4 × 4–6"],["Overhead press","3 × 6–8"],["Incline DB press","3 × 8–10"],["DB lateral raise","3 × 12–15"],["Triceps pressdown","3 × 10–12"],["Overhead triceps extension","2 × 10–12"]]],
+["🔵 Day 2 — Pull + Acceleration",[["Wall acceleration switch","2 × 5/leg"],["Falling start","3 × 10 yd"],["2-point sprint","3 × 15 yd"],["Medicine-ball overhead slam","3 × 5"],["Deadlift","3 × 3–5"],["Weighted pull-up / pulldown","3 × 5–8"],["Barbell row","3 × 6–8"],["Chest-supported DB row","2 × 8–10"],["Face pull","3 × 12–20"],["EZ-bar curl","3 × 8–10"],["Hammer curl","2 × 10–12"],["Farmer carry","3 × 30–40 yd"]]],
+["🔴 Day 3 — Legs + Vertical",[["Pogo","2 × 10"],["Countermovement jump","3 × 3"],["Box jump","3 × 3"],["Broad jump","3 × 3"],["Two-foot approach jump","3 × 2"],["One-foot approach jump","2 × 2/leg"],["Back squat","4 × 4–6"],["Romanian deadlift","3 × 6–8"],["Bulgarian split squat","3 × 8/leg"],["Leg press","2 × 10"],["Calf raise","3 × 10–15"],["Tibialis raise","3 × 15–20"],["Hanging leg raise","3 × 10–15"]]],
+["⚪ Day 4 — Recovery",[["Walk or easy bike","20–30 min"],["Ankle mobility","5 min"],["Hip / hamstring mobility","5–10 min"],["Upper-back / shoulder mobility","5 min"]]],
+["🟠 Day 5 — Upper Muscle + Power",[["Medicine-ball chest pass","3 × 4"],["Incline barbell press","3 × 8–12"],["Cable / machine fly","3 × 12–15"],["DB shoulder press","3 × 8–12"],["Cable lateral raise","3 × 12–20"],["Rear-delt fly","3 × 15–20"],["Pull-up / lat pulldown","3 × 8–12"],["Chest-supported row","3 × 8–12"],["Triceps exercise","2 × 10–15"],["Biceps curl","2 × 10–15"]]],
+["🟣 Day 6 — Legs + Fast Switch",[["10–20 yd sprint","5 runs"],["Lateral bound","3 × 4/side"],["Approach jump","3 × 2"],["Hesitation → explosive drive","2 rounds × 3/side"],["Crossover → acceleration","2 rounds × 3/side"],["Retreat → re-attack","2 rounds × 3/side"],["Hard drive → stop → explode","2 rounds × 3/side"],["Closeout → attack → finish","2 rounds × 3/side"],["Hack squat","3 × 8–10"],["Hip thrust","3 × 8–10"],["Walking lunge","3 × 10/leg"],["Leg curl","3 × 10–12"],["Calf raise","3 × 12–15"],["Tibialis raise","3 × 15–20"],["Cable crunch","3 × 12–15"]]],
+["⚫ Day 7 — Complete Rest",[["Complete rest","Recover • hydrate • sleep"]]]
+];
+const phases=[
+["Foundation","Technique first. Establish baseline loads and clean landings.","Use conservative loads; leave ~2 good reps in reserve. Jumps and sprints are high quality, not conditioning."],
+["Foundation","Repeat Week 1 with better execution.","If all lifting reps were clean, add a small amount of load. Do not increase jump volume just to make it harder."],
+["Build","Increase strength and elastic power.","For main lifts, add about 2.5–5% only if the full rep range was achieved cleanly. Sprint/jump effort can rise."],
+["Build","Strongest full-volume build week.","Repeat or slightly improve Week 3 loads/times. Do not progress an exercise if technique deteriorates."],
+["Deload","Reduce accumulated fatigue.","Cut work sets and hard sprint/jump reps about 35–40%. Keep movement crisp; no need to chase PRs."],
+["Explosive","Shift emphasis toward maximum speed and power.","Main lifts stay strong but avoid grinding. Give full recovery on sprints and max jumps."],
+["Explosive","Peak-quality training week.","Try to beat Week 6 speed/jump quality, not by adding fatigue. Keep strength loads crisp."],
+["Peak + Test","Reduce fatigue and test performance.","Cut lifting volume about 40–50%. Test vertical, 10-yard sprint and 5-10-5 after adequate recovery."]
+];
+let week=+(localStorage.getItem("pplWeek")||1);
+const key=(x)=>`pplx_w${week}_${x}`;
+function doseFor(w,dose){if(w===5)return dose+" • DELOAD: ~35–40% fewer work sets/reps";if(w===8)return dose+" • PEAK: ~40–50% less lifting volume";return dose}
+function renderWeeks(){const e=document.getElementById("weeks");e.innerHTML="";for(let i=1;i<=8;i++){let b=document.createElement("button");b.className="weekbtn "+(i===week?"active":"");b.textContent="Week "+i;b.onclick=()=>{week=i;localStorage.setItem("pplWeek",i);render()};e.appendChild(b)}}
+function render(){renderWeeks();const p=phases[week-1];phase.textContent=`Week ${week}: ${p[0]}`;phaseDesc.textContent=p[1];rule.textContent=p[2];days.innerHTML="";base.forEach((day,di)=>{let c=document.createElement("div");c.className="card";c.innerHTML=`<h2>${day[0]}</h2>`;day[1].forEach((ex,ei)=>{let id=`d${di}e${ei}`,checked=localStorage.getItem(key(id))==="1",load=localStorage.getItem(key(id+"load"))||"";let row=document.createElement("div");row.className="exercise";row.innerHTML=`<input type="checkbox" ${checked?"checked":""}><div><div class="exname">${ex[0]}</div><div class="dose">${doseFor(week,ex[1])}</div></div><input class="load" inputmode="decimal" placeholder="lb/time" value="${load}">`;let cb=row.children[0],inp=row.children[2];cb.onchange=()=>{localStorage.setItem(key(id),cb.checked?"1":"0");updateProgress()};inp.oninput=()=>localStorage.setItem(key(id+"load"),inp.value);c.appendChild(row)});days.appendChild(c)});document.querySelectorAll("[data-metric]").forEach(inp=>{inp.value=localStorage.getItem(key("m_"+inp.dataset.metric))||"";inp.oninput=()=>{localStorage.setItem(key("m_"+inp.dataset.metric),inp.value);comparison()}});updateProgress();comparison()}
+function updateProgress(){const boxes=[...document.querySelectorAll('.exercise input[type=checkbox]')],done=boxes.filter(x=>x.checked).length,val=boxes.length?Math.round(done/boxes.length*100):0;bar.style.width=val+"%";pct.textContent=`${done} of ${boxes.length} items complete • ${val}%`}
+function metric(w,m){return localStorage.getItem(`pplx_w${w}_m_${m}`)||"—"}
+function diff(m,lowerBetter=false){let a=parseFloat(metric(1,m)),b=parseFloat(metric(8,m));if(isNaN(a)||isNaN(b))return "—";let d=b-a;if(lowerBetter)d=a-b;return(d>=0?"+":"")+d.toFixed(2)}
+function comparison(){compare.innerHTML=`Week 1 → Week 8<br><br>Standing vertical: <b>${metric(1,"sv")} → ${metric(8,"sv")}</b> &nbsp; Improvement: <b>${diff("sv")}"</b><br>Approach vertical: <b>${metric(1,"av")} → ${metric(8,"av")}</b> &nbsp; Improvement: <b>${diff("av")}"</b><br>10-yard sprint: <b>${metric(1,"sprint")} → ${metric(8,"sprint")}</b> &nbsp; Time gained: <b>${diff("sprint",true)} sec</b><br>5-10-5 shuttle: <b>${metric(1,"shuttle")} → ${metric(8,"shuttle")}</b> &nbsp; Time gained: <b>${diff("shuttle",true)} sec</b>`}
+render();
+</script>
+</body></html>
